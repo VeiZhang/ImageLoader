@@ -3,7 +3,6 @@ package com.excellence.imageloader.strategy;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
-import com.excellence.imageloader.ImageLoader;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -17,43 +16,52 @@ import java.io.File;
  *              https://github.com/square/picasso
  * </pre>
  */
-public class PicassoImageLoader implements ImageLoader
+public class PicassoImageLoader extends BaseImageLoader
 {
+	private Picasso mPicasso = null;
+
+	protected PicassoImageLoader()
+	{
+		if (mPicasso == null)
+		{
+			mPicasso = Picasso.get();
+		}
+	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId)
 	{
-		Picasso.get().load(resId).into(view);
+		mPicasso.load(resId).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId)
 	{
-		Picasso.get().load(resId).placeholder(placeholderResId).error(errorResId).into(view);
+		mPicasso.load(resId).placeholder(placeholderResId).error(errorResId).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file)
 	{
-		Picasso.get().load(file).into(view);
+		mPicasso.load(file).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId)
 	{
-		Picasso.get().load(file).placeholder(placeholderResId).error(errorResId).into(view);
+		mPicasso.load(file).placeholder(placeholderResId).error(errorResId).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url)
 	{
-		Picasso.get().load(url).into(view);
+		mPicasso.load(url).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId)
 	{
-		Picasso.get().load(url).placeholder(placeholderResId).error(errorResId).into(view);
+		mPicasso.load(url).placeholder(placeholderResId).error(errorResId).into(view);
 	}
 
 }

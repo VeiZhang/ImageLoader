@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
 		int error = R.drawable.error;
 		String url = "https://raw.githubusercontent.com/VeiZhang/veizhang.github.io/master/uploads/tiimor.png";
 
-		ImageLoader imageLoader = new PicassoImageLoader();
+		ImageLoader imageLoader = PicassoImageLoader.init();
 		/**
 		 * Picasso加载资源图片
 		 */
