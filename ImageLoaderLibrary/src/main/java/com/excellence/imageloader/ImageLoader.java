@@ -1,7 +1,10 @@
 package com.excellence.imageloader;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
+
+import java.io.File;
 
 /**
  * <pre>
@@ -19,7 +22,7 @@ public interface ImageLoader
 	 * @param view
 	 * @param resId
 	 */
-	void loadImage(ImageView view, @DrawableRes int resId);
+	void loadImage(@NonNull ImageView view, @DrawableRes int resId);
 
 	/**
 	 * 加载资源图片，占位图片，错误图片
@@ -29,24 +32,42 @@ public interface ImageLoader
 	 * @param placeholderResId
 	 * @param errorResId
 	 */
-	void loadImage(ImageView view, @DrawableRes int resId, @DrawableRes int placeholderResId, @DrawableRes int errorResId);
+	void loadImage(@NonNull ImageView view, @DrawableRes int resId, @DrawableRes int placeholderResId, @DrawableRes int errorResId);
 
 	/**
-	 * 加载本地、网络图片
+	 * 加载本地图片
+	 *
+	 * @param view
+	 * @param file
+	 */
+	void loadImage(@NonNull ImageView view, @NonNull File file);
+
+	/**
+	 * 加载本地图片，占位图片，错误图片
+	 *
+	 * @param view
+	 * @param file
+	 * @param placeholderResId
+	 * @param errorResId
+	 */
+	void loadImage(@NonNull ImageView view, @NonNull File file, @DrawableRes int placeholderResId, @DrawableRes int errorResId);
+
+	/**
+	 * 加载网络图片
 	 *
 	 * @param view
 	 * @param url
 	 */
-	void loadImage(ImageView view, String url);
+	void loadImage(@NonNull ImageView view, @NonNull String url);
 
 	/**
-	 * 加载本地、网络图片，占位图片，错误图片
+	 * 加载网络图片，占位图片，错误图片
 	 *
 	 * @param view
 	 * @param url
 	 * @param placeholderResId
 	 * @param errorResId
 	 */
-	void loadImage(ImageView view, String url, @DrawableRes int placeholderResId, @DrawableRes int errorResId);
+	void loadImage(@NonNull ImageView view, @NonNull String url, @DrawableRes int placeholderResId, @DrawableRes int errorResId);
 
 }

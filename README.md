@@ -8,6 +8,13 @@
 * Universal-ImageLoader
 * Volley
 
+权限
+
+```
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+```
+
 ## [Fresco](https://github.com/facebook/fresco/)
 
 ```
