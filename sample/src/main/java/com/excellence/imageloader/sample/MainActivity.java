@@ -47,6 +47,6 @@ public class MainActivity extends AppCompatActivity
 		/**
 		 * Picasso加载本地图片
 		 */
-		// imageLoader.loadImage(imageView, new File("/sdcard/icon.jpg"), placeholder, error);
+		imageLoader.loadImage(imageView, new File("/sdcard/icon.jpg"), placeholder, error);
 	}
 }

@@ -3,6 +3,7 @@ package com.excellence.imageloader.strategy;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import com.excellence.imageloader.ImageLoaderOptions;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -20,8 +21,9 @@ public class PicassoImageLoader extends BaseImageLoader
 {
 	private Picasso mPicasso = null;
 
-	protected PicassoImageLoader()
+	protected PicassoImageLoader(ImageLoaderOptions options)
 	{
+		super(options);
 		if (mPicasso == null)
 		{
 			mPicasso = Picasso.get();
