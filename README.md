@@ -8,6 +8,11 @@
 * Universal-ImageLoader
 * Volley
 
+* 多个图片加载库切换
+* 图片加载进度回调
+* 自定义缓存目录、大小
+* 清除缓存
+
 权限
 
 ```
@@ -55,6 +60,7 @@ Picasso.get()
   .into(imageView)
 ```
 
+缓存路径:`data/data/your package name/cache/picasso-cache/(默认路径)`
 
 ## [Glide](https://github.com/bumptech/glide/)
 
