@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.excellence.imageloader.ImageLoaderOptions;
+import com.excellence.imageloader.listener.IListener;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -102,37 +104,100 @@ public class PicassoImageLoader extends BaseImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId)
 	{
-		loadImage(view, resId, 0, 0);
+		loadImage(view, resId, null);
+	}
+
+	@Override
+	public void loadImage(@NonNull ImageView view, int resId, IListener listener)
+	{
+		loadImage(view, resId, 0, 0, listener);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId)
 	{
-		load(resId, placeholderResId, errorResId).into(view);
+		loadImage(view, resId, placeholderResId, errorResId, null);
+	}
+
+	@Override
+	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId, IListener listener)
+	{
+		load(resId, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file)
 	{
-		loadImage(view, file, 0, 0);
+		loadImage(view, file, null);
+	}
+
+	@Override
+	public void loadImage(@NonNull ImageView view, @NonNull File file, IListener listener)
+	{
+		loadImage(view, file, 0, 0, listener);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId)
 	{
-		load(file, placeholderResId, errorResId).into(view);
+		loadImage(view, file, placeholderResId, errorResId, null);
+	}
+
+	@Override
+	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId, IListener listener)
+	{
+		load(file, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url)
 	{
-		loadImage(view, url, 0, 0);
+		loadImage(view, url, null);
+	}
+
+	@Override
+	public void loadImage(@NonNull ImageView view, @NonNull String url, IListener listener)
+	{
+		loadImage(view, url, 0, 0, listener);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId)
 	{
-		load(url, placeholderResId, errorResId).into(view);
+		loadImage(view, url, placeholderResId, errorResId, null);
 	}
 
+	@Override
+	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId, IListener listener)
+	{
+		load(url, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
+	}
+
+	private class ImageLoaderListener implements Callback
+	{
+		private IListener mListener = null;
+
+		public ImageLoaderListener(IListener listener)
+		{
+			mListener = listener;
+		}
+
+		@Override
+		public void onSuccess()
+		{
+			if (mListener != null)
+			{
+				mListener.onSuccess();
+			}
+		}
+
+		@Override
+		public void onError(Exception e)
+		{
+			if (mListener != null)
+			{
+				mListener.onError();
+			}
+		}
+	}
 }
