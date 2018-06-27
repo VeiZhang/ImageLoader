@@ -14,12 +14,18 @@ public class ImageLoaderOptions
 {
 
 	public int mPlaceholderResId;
-    public int mErrorResId;
-    public boolean isCrossFade = false;
-    public boolean isCache = false;
+	public int mErrorResId;
+	public boolean isLogEnable = false;
+	public boolean isFade = true;
+	public boolean isCache = true;
 
 	private ImageLoaderOptions(Builder builder)
 	{
+		mPlaceholderResId = builder.mPlaceholderResId;
+		mErrorResId = builder.mErrorResId;
+		isLogEnable = builder.isLogEnable;
+		isFade = builder.isFade;
+		isCache = builder.isCache;
 	}
 
 	public static class Builder
@@ -28,10 +34,12 @@ public class ImageLoaderOptions
 		private int mPlaceholderResId;
 		// 错误图片
 		private int mErrorResId;
+		// 开启打印
+		private boolean isLogEnable = false;
 		// 是否渐变平滑显示图片
-		private boolean isCrossFade = false;
+		private boolean isFade = true;
 		// 是否使用缓存
-		private boolean isCache = false;
+		private boolean isCache = true;
 
 		public Builder setPlaceholderResId(@DrawableRes int placeholderResId)
 		{
@@ -45,9 +53,15 @@ public class ImageLoaderOptions
 			return this;
 		}
 
-		public Builder isCrossFade(boolean isCrossFade)
+		public Builder isLogEnable(boolean isLogEnable)
 		{
-			this.isCrossFade = isCrossFade;
+			this.isLogEnable = isLogEnable;
+			return this;
+		}
+
+		public Builder isFade(boolean isFade)
+		{
+			this.isFade = isFade;
 			return this;
 		}
 

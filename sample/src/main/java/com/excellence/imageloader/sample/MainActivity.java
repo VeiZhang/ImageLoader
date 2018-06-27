@@ -10,8 +10,6 @@ import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.sample.databinding.ActivityMainBinding;
 import com.excellence.imageloader.strategy.PicassoImageLoader;
 
-import java.io.File;
-
 public class MainActivity extends AppCompatActivity
 {
 
@@ -34,7 +32,8 @@ public class MainActivity extends AppCompatActivity
 		int error = R.drawable.error;
 		String url = "https://raw.githubusercontent.com/VeiZhang/veizhang.github.io/master/uploads/tiimor.png";
 
-		ImageLoader imageLoader = PicassoImageLoader.init(new ImageLoaderOptions.Builder().build());
+		ImageLoaderOptions options = new ImageLoaderOptions.Builder().isLogEnable(true).isCache(false).build();
+		ImageLoader imageLoader = PicassoImageLoader.init(options);
 		/**
 		 * Picasso加载资源图片
 		 */

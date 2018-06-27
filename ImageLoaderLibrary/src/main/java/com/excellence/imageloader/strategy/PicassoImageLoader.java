@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.excellence.imageloader.ImageLoaderOptions;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -29,6 +31,15 @@ public class PicassoImageLoader extends BaseImageLoader
 		{
 			mPicasso = Picasso.get();
 		}
+		// 开启打印
+		mPicasso.setLoggingEnabled(options.isLogEnable);
+		/**
+		 * 开启指示
+		 * 蓝色：从内存中获取，性能最佳
+		 * 绿色：从本地获取，性能一般
+		 * 红色：从网络加载，性能最差
+		 */
+		mPicasso.setIndicatorsEnabled(options.isLogEnable);
 	}
 
 	private RequestCreator load(Object obj, int placeholderResId, int errorResId)
@@ -70,6 +81,21 @@ public class PicassoImageLoader extends BaseImageLoader
 		{
 			requestCreator.error(errorResId);
 		}
+
+		if (!mOptions.isFade)
+		{
+			requestCreator.noFade();
+		}
+
+		if (!mOptions.isCache)
+		{
+			/** 有网的情况下有效；没网的情况下无效，仍然会加载缓存 **/
+			// 跳过内存缓存
+			requestCreator.memoryPolicy(MemoryPolicy.NO_CACHE);
+			// 跳过磁盘缓存
+			requestCreator.networkPolicy(NetworkPolicy.NO_CACHE);
+		}
+
 		return requestCreator;
 	}
 
