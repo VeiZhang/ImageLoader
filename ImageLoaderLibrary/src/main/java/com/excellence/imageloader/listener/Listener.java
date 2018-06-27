@@ -12,19 +12,19 @@ public class Listener implements IListener
 {
 
 	@Override
-	public void progress()
+	public void onProgress()
 	{
 
 	}
 
 	@Override
-	public void success()
+	public void onSuccess()
 	{
 
 	}
 
 	@Override
-	public void error()
+	public void onError()
 	{
 
 	}

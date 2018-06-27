@@ -10,9 +10,9 @@ package com.excellence.imageloader.listener;
  */
 public interface IListener
 {
-	void progress();
+	void onProgress();
 
-	void success();
+	void onSuccess();
 
-	void error();
+	void onError();
 }
