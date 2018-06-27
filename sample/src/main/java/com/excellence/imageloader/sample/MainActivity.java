@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity
 		String url = "https://raw.githubusercontent.com/VeiZhang/veizhang.github.io/master/uploads/tiimor.png";
 
 		ImageLoaderOptions options = new ImageLoaderOptions.Builder().isLogEnable(true).isCache(false).build();
-		ImageLoader imageLoader = PicassoImageLoader.init(options);
+		ImageLoader imageLoader = new PicassoImageLoader(options);
 		/**
 		 * Picasso加载资源图片
 		 */

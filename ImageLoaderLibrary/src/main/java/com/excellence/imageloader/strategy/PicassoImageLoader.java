@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
 import com.squareup.picasso.Callback;
@@ -19,17 +20,28 @@ import java.io.File;
  *     author : VeiZhang
  *     blog   : http://tiimor.cn
  *     time   : 2018/6/20
- *     desc   : Picasso加载器
+ *     desc   : Picasso图片加载器
  *              https://github.com/square/picasso
  * </pre>
  */
-public class PicassoImageLoader extends BaseImageLoader
+public final class PicassoImageLoader implements ImageLoader
 {
+	private ImageLoaderOptions mOptions = null;
 	private Picasso mPicasso = null;
 
-	protected PicassoImageLoader(ImageLoaderOptions options)
+	public PicassoImageLoader()
 	{
-		super(options);
+		this(null);
+	}
+
+	public PicassoImageLoader(ImageLoaderOptions options)
+	{
+		mOptions = options;
+		if (mOptions == null)
+		{
+			mOptions = new ImageLoaderOptions.Builder().build();
+		}
+
 		if (mPicasso == null)
 		{
 			mPicasso = Picasso.get();
