@@ -1,5 +1,6 @@
 package com.excellence.imageloader.strategy;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
@@ -171,6 +172,33 @@ public class PicassoImageLoader extends BaseImageLoader
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId, IListener listener)
 	{
 		load(url, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
+	}
+
+	@Override
+	public void clearCache()
+	{
+		/**
+		 * 清除不了所有的缓存，使用推荐的API
+		 * @see Picasso#invalidate(Uri)  {@link #clearCache(Uri)}
+		 * @see Picasso#invalidate(File)  {@link #clearCache(File)}
+		 * @see Picasso#invalidate(String)  {@link #clearCache(String)}
+		 */
+	}
+
+	/***************** 定制API *****************/
+	public void clearCache(Uri uri)
+	{
+		mPicasso.invalidate(uri);
+	}
+
+	public void clearCache(File file)
+	{
+		mPicasso.invalidate(file);
+	}
+
+	public void clearCache(String path)
+	{
+		mPicasso.invalidate(path);
 	}
 
 	private class ImageLoaderListener implements Callback

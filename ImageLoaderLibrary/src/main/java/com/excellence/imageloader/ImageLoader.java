@@ -84,4 +84,5 @@ public interface ImageLoader
 
 	void loadImage(@NonNull ImageView view, @NonNull String url, @DrawableRes int placeholderResId, @DrawableRes int errorResId, IListener listener);
 
+	void clearCache();
 }
