@@ -42,10 +42,8 @@ public final class PicassoImageLoader implements ImageLoader
 			mOptions = new ImageLoaderOptions.Builder().build();
 		}
 
-		if (mPicasso == null)
-		{
-			mPicasso = Picasso.get();
-		}
+		mPicasso = Picasso.get();
+
 		// 开启打印
 		mPicasso.setLoggingEnabled(options.isLogEnable);
 		/**
