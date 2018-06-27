@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.excellence.imageloader.ImageLoader;
+import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.sample.databinding.ActivityMainBinding;
 import com.excellence.imageloader.strategy.PicassoImageLoader;
 
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity
 		int error = R.drawable.error;
 		String url = "https://raw.githubusercontent.com/VeiZhang/veizhang.github.io/master/uploads/tiimor.png";
 
-		ImageLoader imageLoader = PicassoImageLoader.init();
+		ImageLoader imageLoader = PicassoImageLoader.init(new ImageLoaderOptions.Builder().build());
 		/**
 		 * Picasso加载资源图片
 		 */
@@ -42,11 +43,11 @@ public class MainActivity extends AppCompatActivity
 		/**
 		 * Picasso加载网络图片
 		 */
-		// imageLoader.loadImage(imageView, url, placeholder, error);
+		imageLoader.loadImage(imageView, url, placeholder, error);
 
 		/**
 		 * Picasso加载本地图片
 		 */
-		imageLoader.loadImage(imageView, new File("/sdcard/icon.jpg"), placeholder, error);
+		// imageLoader.loadImage(imageView, new File("/sdcard/icon.jpg"), placeholder, error);
 	}
 }

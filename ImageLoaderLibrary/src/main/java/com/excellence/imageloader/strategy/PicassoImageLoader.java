@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 
@@ -30,40 +31,71 @@ public class PicassoImageLoader extends BaseImageLoader
 		}
 	}
 
+	private RequestCreator load(Object obj)
+	{
+		RequestCreator requestCreator = null;
+		if (obj instanceof Integer)
+		{
+			requestCreator = mPicasso.load((Integer) obj);
+		}
+		else if (obj instanceof File)
+		{
+			requestCreator = mPicasso.load((File) obj);
+		}
+		else if (obj instanceof String)
+		{
+			requestCreator = mPicasso.load((String) obj);
+		}
+		else
+		{
+			requestCreator = mPicasso.load(0);
+		}
+
+		if (mOptions.mPlaceholderResId != 0)
+		{
+			requestCreator.placeholder(mOptions.mPlaceholderResId);
+		}
+		if (mOptions.mErrorResId != 0)
+		{
+			requestCreator.error(mOptions.mErrorResId);
+		}
+		return requestCreator;
+	}
+
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId)
 	{
-		mPicasso.load(resId).into(view);
+		load(resId).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId)
 	{
-		mPicasso.load(resId).placeholder(placeholderResId).error(errorResId).into(view);
+		load(resId).placeholder(placeholderResId).error(errorResId).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file)
 	{
-		mPicasso.load(file).into(view);
+		load(file).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId)
 	{
-		mPicasso.load(file).placeholder(placeholderResId).error(errorResId).into(view);
+		load(file).placeholder(placeholderResId).error(errorResId).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url)
 	{
-		mPicasso.load(url).into(view);
+		load(url).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId)
 	{
-		mPicasso.load(url).placeholder(placeholderResId).error(errorResId).into(view);
+		load(url).placeholder(placeholderResId).error(errorResId).into(view);
 	}
 
 }

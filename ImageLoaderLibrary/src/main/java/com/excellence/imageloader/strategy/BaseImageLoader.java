@@ -35,7 +35,7 @@ abstract class BaseImageLoader implements ImageLoader
 		mOptions = options;
 		if (mOptions == null)
 		{
-			mOptions = new ImageLoaderOptions();
+			mOptions = new ImageLoaderOptions.Builder().build();
 		}
 	}
 }
