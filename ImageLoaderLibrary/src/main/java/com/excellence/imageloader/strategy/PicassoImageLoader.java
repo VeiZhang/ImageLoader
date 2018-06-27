@@ -31,7 +31,7 @@ public class PicassoImageLoader extends BaseImageLoader
 		}
 	}
 
-	private RequestCreator load(Object obj)
+	private RequestCreator load(Object obj, int placeholderResId, int errorResId)
 	{
 		RequestCreator requestCreator = null;
 		if (obj instanceof Integer)
@@ -51,6 +51,7 @@ public class PicassoImageLoader extends BaseImageLoader
 			requestCreator = mPicasso.load(0);
 		}
 
+		// 全局占位图和错误图
 		if (mOptions.mPlaceholderResId != 0)
 		{
 			requestCreator.placeholder(mOptions.mPlaceholderResId);
@@ -59,43 +60,53 @@ public class PicassoImageLoader extends BaseImageLoader
 		{
 			requestCreator.error(mOptions.mErrorResId);
 		}
+
+		// 定制的占位图和错误图，同时有全局图时，以定制的为准
+		if (placeholderResId != 0)
+		{
+			requestCreator.placeholder(placeholderResId);
+		}
+		if (errorResId != 0)
+		{
+			requestCreator.error(errorResId);
+		}
 		return requestCreator;
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId)
 	{
-		load(resId).into(view);
+		loadImage(view, resId, 0, 0);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId)
 	{
-		load(resId).placeholder(placeholderResId).error(errorResId).into(view);
+		load(resId, placeholderResId, errorResId).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file)
 	{
-		load(file).into(view);
+		loadImage(view, file, 0, 0);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId)
 	{
-		load(file).placeholder(placeholderResId).error(errorResId).into(view);
+		load(file, placeholderResId, errorResId).into(view);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url)
 	{
-		load(url).into(view);
+		loadImage(view, url, 0, 0);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId)
 	{
-		load(url).placeholder(placeholderResId).error(errorResId).into(view);
+		load(url, placeholderResId, errorResId).into(view);
 	}
 
 }
