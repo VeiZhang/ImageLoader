@@ -30,15 +30,25 @@ public class ImageLoaderOptions
 
 	public static class Builder
 	{
-		// 占位图片
+		/**
+		 * 占位图片
+		 */
 		private int mPlaceholderResId;
-		// 错误图片
+		/**
+		 * 错误图片
+		 */
 		private int mErrorResId;
-		// 开启打印
+		/**
+		 * 开启打印
+		 */
 		private boolean isLogEnable = false;
-		// 是否渐变平滑显示图片
+		/**
+		 * 是否渐变平滑显示图片
+		 */
 		private boolean isFade = true;
-		// 是否使用缓存
+		/**
+		 * 是否使用缓存
+		 */
 		private boolean isCache = true;
 
 		public Builder setPlaceholderResId(@DrawableRes int placeholderResId)
