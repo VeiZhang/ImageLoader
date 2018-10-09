@@ -34,18 +34,6 @@ dependencies {
 /*********************上传jCenter依赖*********************/
 apply plugin: 'com.novoda.bintray-release'
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.novoda:bintray-release:0.8.0'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
 /**避免中文注释:编码GBK的不可映射字符**/
 tasks.withType(Javadoc) {
     options {
@@ -62,36 +50,15 @@ tasks.withType(Javadoc) {
 }
 
 /**发布到我的Bintray仓库**/
-def user = getPropertyValue('bintrayUser')
-def key = getPropertyValue('bintrayKey')
-def org = getPropertyValue('userOrg')
-
 publish {
-    bintrayUser = user
-    bintrayKey = key
-    dryRun = false
-    userOrg = org
-    groupId = 'com.excellence'
+    bintrayUser = rootProject.bintrayUser
+    bintrayKey = rootProject.bintrayKey
+    dryRun = Boolean.parseBoolean(rootProject.dryRun)
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId
     artifactId = 'imageloader'
-    publishVersion = '1.0.0'
+    publishVersion = rootProject.publishVersion
     desc = 'Android图片加载器'
-    website = 'https://github.com/VeiZhang/ImageLoader'
-    licences = ['Apache-2.0']
-}
-
-/**读取bintray.key文件的key**/
-def getPropertyValue(String key) {
-    if (key == null || key.length() == 0)
-        return null
-
-    File file = project.rootProject.file('../../bintray.key')
-    if (!file.exists())
-        return null
-
-    InputStream inputStream = file.newDataInputStream()
-    Properties properties = new Properties()
-    properties.load(inputStream)
-
-    //读取Key
-    return properties.getProperty(key)
+    website = rootProject.website
+    licences = rootProject.licences
 }
