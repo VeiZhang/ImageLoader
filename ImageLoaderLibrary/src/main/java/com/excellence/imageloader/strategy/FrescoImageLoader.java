@@ -40,76 +40,81 @@ public final class FrescoImageLoader implements ImageLoader
 		Fresco.initialize(context);
 	}
 
+	private void load(ImageView view, Object obj, int placeholderResId, int errorResId, IListener listener)
+	{
+
+	}
+
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId)
 	{
-
+		loadImage(view, resId, null);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, IListener listener)
 	{
-
+		loadImage(view, resId, 0, 0, listener);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId)
 	{
-
+		loadImage(view, resId, placeholderResId, errorResId, null);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId, IListener listener)
 	{
-
+		load(view, resId, placeholderResId, errorResId, listener);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file)
 	{
-
+		loadImage(view, file, null);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, IListener listener)
 	{
-
+		loadImage(view, file, 0, 0, listener);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId)
 	{
-
+		loadImage(view, file, placeholderResId, errorResId, null);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId, IListener listener)
 	{
-
+		load(view, file, placeholderResId, errorResId, listener);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url)
 	{
-
+		loadImage(view, url, null);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, IListener listener)
 	{
-
+		loadImage(view, url, 0, 0, listener);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId)
 	{
-
+		loadImage(view, url, placeholderResId, errorResId, null);
 	}
 
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId, IListener listener)
 	{
-
+		load(view, url, placeholderResId, errorResId, listener);
 	}
 
 	@Override

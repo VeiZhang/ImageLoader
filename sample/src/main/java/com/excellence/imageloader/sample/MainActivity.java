@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
 
 	private void initView()
 	{
-		ImageView imageView = mBinding.picassoImg;
+		ImageView imageView = mBinding.img;
 		int success = R.drawable.success;
 		int placeholder = R.drawable.placeholder;
 		int error = R.drawable.error;
