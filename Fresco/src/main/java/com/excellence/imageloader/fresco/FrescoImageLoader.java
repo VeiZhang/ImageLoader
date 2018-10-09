@@ -1,4 +1,4 @@
-package com.excellence.imageloader.strategy;
+package com.excellence.imageloader.fresco;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

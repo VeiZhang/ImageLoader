@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 19
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
@@ -29,6 +29,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    compileOnly project(':ImageLoaderLibrary')
 }
 
 /*********************上传jCenter依赖*********************/
@@ -72,9 +74,9 @@ publish {
     dryRun = false
     userOrg = org
     groupId = 'com.excellence'
-    artifactId = 'imageloader'
+    artifactId = 'imageloader-picasso'
     publishVersion = '1.0.0'
-    desc = 'Android图片加载器'
+    desc = 'Picasso图片加载器'
     website = 'https://github.com/VeiZhang/ImageLoader'
     licences = ['Apache-2.0']
 }

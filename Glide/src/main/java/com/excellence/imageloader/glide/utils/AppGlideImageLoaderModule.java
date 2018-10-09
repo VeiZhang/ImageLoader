@@ -1,4 +1,4 @@
-package com.excellence.imageloader.utils;
+package com.excellence.imageloader.glide.utils;
 
 import android.view.View;
 

@@ -1,17 +1,25 @@
-package com.excellence.imageloader.strategy;
+package com.excellence.imageloader.glide;
 
-import android.net.Uri;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
+import com.excellence.imageloader.glide.utils.GlideApp;
+import com.excellence.imageloader.glide.utils.GlideRequest;
+import com.excellence.imageloader.glide.utils.GlideRequests;
 
 import java.io.File;
 
@@ -19,97 +27,70 @@ import java.io.File;
  * <pre>
  *     author : VeiZhang
  *     blog   : http://tiimor.cn
- *     time   : 2018/6/20
- *     desc   : Picasso图片加载器
- *              https://github.com/square/picasso
- * </pre>
+ *     time   : 2018/6/27
+ *     desc   : Glide图片加载器
+ *              https://github.com/bumptech/glide/
+ * </pre> 
  */
-public final class PicassoImageLoader implements ImageLoader
+public final class GlideImageLoader implements ImageLoader
 {
+	private Context mContext = null;
 	private ImageLoaderOptions mOptions = null;
-	private Picasso mPicasso = null;
 
-	public PicassoImageLoader()
+	public GlideImageLoader(Context context)
 	{
-		this(null);
+		this(context, null);
 	}
 
-	public PicassoImageLoader(ImageLoaderOptions options)
+	public GlideImageLoader(Context context, ImageLoaderOptions options)
 	{
+		mContext = context.getApplicationContext();
 		mOptions = options;
 		if (mOptions == null)
 		{
 			mOptions = new ImageLoaderOptions.Builder().build();
 		}
-
-		mPicasso = Picasso.get();
-
-		// 开启打印
-		mPicasso.setLoggingEnabled(options.isLogEnable);
-		/**
-		 * 开启指示
-		 * 蓝色：从内存中获取，性能最佳
-		 * 绿色：从本地获取，性能一般
-		 * 红色：从网络加载，性能最差
-		 */
-		mPicasso.setIndicatorsEnabled(options.isLogEnable);
 	}
 
-	private RequestCreator load(Object obj, int placeholderResId, int errorResId)
+	private RequestBuilder<Drawable> load(Object obj, int placeholderResId, int errorResId)
 	{
-		RequestCreator requestCreator = null;
-		if (obj instanceof Integer)
-		{
-			requestCreator = mPicasso.load((Integer) obj);
-		}
-		else if (obj instanceof File)
-		{
-			requestCreator = mPicasso.load((File) obj);
-		}
-		else if (obj instanceof String)
-		{
-			requestCreator = mPicasso.load((String) obj);
-		}
-		else
-		{
-			requestCreator = mPicasso.load(0);
-		}
+		GlideRequests glideRequests = GlideApp.with(mContext);
+		GlideRequest<Drawable> glideRequest = glideRequests.load(obj);
 
 		// 全局占位图和错误图
 		if (mOptions.mPlaceholderResId != 0)
 		{
-			requestCreator.placeholder(mOptions.mPlaceholderResId);
+			glideRequest.placeholder(mOptions.mPlaceholderResId);
 		}
 		if (mOptions.mErrorResId != 0)
 		{
-			requestCreator.error(mOptions.mErrorResId);
+			glideRequest.error(mOptions.mErrorResId);
 		}
 
 		// 定制的占位图和错误图，同时有全局图时，以定制的为准
 		if (placeholderResId != 0)
 		{
-			requestCreator.placeholder(placeholderResId);
+			glideRequest.placeholder(placeholderResId);
 		}
 		if (errorResId != 0)
 		{
-			requestCreator.error(errorResId);
+			glideRequest.error(errorResId);
 		}
 
 		if (!mOptions.isFade)
 		{
-			requestCreator.noFade();
+			glideRequest.transition(new DrawableTransitionOptions().crossFade());
 		}
 
 		if (!mOptions.isCache)
 		{
-			/** 有网的情况下有效；没网的情况下无效，仍然会加载缓存 **/
 			// 跳过内存缓存
-			requestCreator.memoryPolicy(MemoryPolicy.NO_CACHE);
+			glideRequest.skipMemoryCache(true);
 			// 跳过磁盘缓存
-			requestCreator.networkPolicy(NetworkPolicy.NO_CACHE);
+			glideRequest.diskCacheStrategy(DiskCacheStrategy.NONE);
 		}
 
-		return requestCreator;
+		return glideRequest;
 	}
 
 	@Override
@@ -133,7 +114,7 @@ public final class PicassoImageLoader implements ImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId, IListener listener)
 	{
-		load(resId, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
+		load(resId, placeholderResId, errorResId).listener(new ImageLoaderListener(listener)).into(view);
 	}
 
 	@Override
@@ -157,7 +138,7 @@ public final class PicassoImageLoader implements ImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId, IListener listener)
 	{
-		load(file, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
+		load(file, placeholderResId, errorResId).listener(new ImageLoaderListener(listener)).into(view);
 	}
 
 	@Override
@@ -181,37 +162,17 @@ public final class PicassoImageLoader implements ImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId, IListener listener)
 	{
-		load(url, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
+		load(url, placeholderResId, errorResId).listener(new ImageLoaderListener(listener)).into(view);
 	}
 
 	@Override
 	public void clearCache()
 	{
-		/**
-		 * 清除不了所有的缓存，使用推荐的API
-		 * @see Picasso#invalidate(Uri)  {@link #clearCache(Uri)}
-		 * @see Picasso#invalidate(File)  {@link #clearCache(File)}
-		 * @see Picasso#invalidate(String)  {@link #clearCache(String)}
-		 */
+		Glide.get(mContext).clearMemory();
+		Glide.get(mContext).clearDiskCache();
 	}
 
-	/***************** 定制API *****************/
-	public void clearCache(Uri uri)
-	{
-		mPicasso.invalidate(uri);
-	}
-
-	public void clearCache(File file)
-	{
-		mPicasso.invalidate(file);
-	}
-
-	public void clearCache(String path)
-	{
-		mPicasso.invalidate(path);
-	}
-
-	private class ImageLoaderListener implements Callback
+	private class ImageLoaderListener implements RequestListener<Drawable>
 	{
 		private IListener mListener = null;
 
@@ -221,21 +182,23 @@ public final class PicassoImageLoader implements ImageLoader
 		}
 
 		@Override
-		public void onSuccess()
-		{
-			if (mListener != null)
-			{
-				mListener.onSuccess();
-			}
-		}
-
-		@Override
-		public void onError(Exception e)
+		public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource)
 		{
 			if (mListener != null)
 			{
 				mListener.onError();
 			}
+			return false;
+		}
+
+		@Override
+		public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource)
+		{
+			if (mListener != null)
+			{
+				mListener.onSuccess();
+			}
+			return false;
 		}
 	}
 }

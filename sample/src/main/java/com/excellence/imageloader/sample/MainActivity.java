@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
+import com.excellence.imageloader.picasso.PicassoImageLoader;
 import com.excellence.imageloader.sample.databinding.ActivityMainBinding;
-import com.excellence.imageloader.strategy.PicassoImageLoader;
 
 public class MainActivity extends AppCompatActivity
 {
