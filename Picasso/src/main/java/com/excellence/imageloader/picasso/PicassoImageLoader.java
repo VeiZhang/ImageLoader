@@ -55,7 +55,7 @@ public final class PicassoImageLoader implements ImageLoader
 		mPicasso.setIndicatorsEnabled(options.isLogEnable);
 	}
 
-	private RequestCreator load(Object obj, int placeholderResId, int errorResId)
+	private RequestCreator load(@NonNull Object obj, int placeholderResId, int errorResId)
 	{
 		RequestCreator requestCreator = null;
 		if (obj instanceof Integer)

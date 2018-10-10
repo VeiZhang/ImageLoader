@@ -52,7 +52,7 @@ public final class GlideImageLoader implements ImageLoader
 		}
 	}
 
-	private RequestBuilder<Drawable> load(Object obj, int placeholderResId, int errorResId)
+	private RequestBuilder<Drawable> load(@NonNull Object obj, int placeholderResId, int errorResId)
 	{
 		GlideRequests glideRequests = GlideApp.with(mContext);
 		GlideRequest<Drawable> glideRequest = glideRequests.load(obj);

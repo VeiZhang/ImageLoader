@@ -1,15 +1,21 @@
 package com.excellence.imageloader.fresco;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * <pre>
@@ -22,6 +28,7 @@ import java.io.File;
  */
 public final class FrescoImageLoader implements ImageLoader
 {
+	private Context mContext = null;
 	private ImageLoaderOptions mOptions = null;
 
 	public FrescoImageLoader(Context context)
@@ -31,18 +38,51 @@ public final class FrescoImageLoader implements ImageLoader
 
 	public FrescoImageLoader(Context context, ImageLoaderOptions options)
 	{
+		mContext = context.getApplicationContext();
 		mOptions = options;
 		if (mOptions == null)
 		{
 			mOptions = new ImageLoaderOptions.Builder().build();
 		}
 
-		Fresco.initialize(context);
+		Fresco.initialize(mContext);
 	}
 
-	private void load(ImageView view, Object obj, int placeholderResId, int errorResId, IListener listener)
+	private void load(@NonNull ImageView view, Object obj, int placeholderResId, int errorResId, IListener listener)
 	{
+		ViewGroup.LayoutParams params = view.getLayoutParams();
+		if (params.width == WRAP_CONTENT)
+		{
+			params.width = MATCH_PARENT;
+		}
+		if (params.height == WRAP_CONTENT)
+		{
+			params.height = MATCH_PARENT;
+		}
+		view.setLayoutParams(params);
 
+		Uri uri = null;
+		if (obj instanceof Integer)
+		{
+			uri = Uri.parse("res://com.excellence.imageloader/" + obj);
+		}
+		else if (obj instanceof File)
+		{
+			uri = Uri.parse("file://" + ((File) obj).getPath());
+		}
+		else if (obj instanceof String)
+		{
+			uri = Uri.parse((String) obj);
+		}
+		else
+		{
+			uri = Uri.EMPTY;
+		}
+
+		if (view instanceof SimpleDraweeView)
+		{
+			view.setImageURI(uri);
+		}
 	}
 
 	@Override
