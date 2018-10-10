@@ -14,6 +14,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -38,6 +39,8 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  */
 public final class FrescoImageLoader implements ImageLoader
 {
+	private static final String REGEX_URL = "[a-zA-z]+://[^\\s]*";
+
 	private Context mContext = null;
 	private ImageLoaderOptions mOptions = null;
 
@@ -96,7 +99,20 @@ public final class FrescoImageLoader implements ImageLoader
 		}
 		else if (obj instanceof String)
 		{
-			uri = Uri.parse((String) obj);
+			if (Pattern.matches(REGEX_URL, (String) obj))
+			{
+				/**
+				 * url
+				 */
+				uri = Uri.parse((String) obj);
+			}
+			else
+			{
+				/**
+				 * file
+				 */
+				uri = Uri.parse("file://" + obj);
+			}
 		}
 		else
 		{

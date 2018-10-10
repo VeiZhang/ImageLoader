@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		ImageLoaderOptions options = new ImageLoaderOptions.Builder().isLogEnable(true).isCache(false).build();
-		mImageLoader = new PicassoImageLoader(options);
+		mImageLoader = new PicassoImageLoader(this, options);
 
 		super.onCreate(savedInstanceState);
 		mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);

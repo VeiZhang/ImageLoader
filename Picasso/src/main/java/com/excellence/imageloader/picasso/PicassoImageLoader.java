@@ -1,5 +1,6 @@
 package com.excellence.imageloader.picasso;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 /**
  * <pre>
@@ -26,15 +28,17 @@ import java.io.File;
  */
 public final class PicassoImageLoader implements ImageLoader
 {
+	private static final String REGEX_URL = "[a-zA-z]+://[^\\s]*";
+
 	private ImageLoaderOptions mOptions = null;
 	private Picasso mPicasso = null;
 
-	public PicassoImageLoader()
+	public PicassoImageLoader(Context context)
 	{
-		this(null);
+		this(context, null);
 	}
 
-	public PicassoImageLoader(ImageLoaderOptions options)
+	public PicassoImageLoader(Context context, ImageLoaderOptions options)
 	{
 		mOptions = options;
 		if (mOptions == null)
@@ -68,7 +72,20 @@ public final class PicassoImageLoader implements ImageLoader
 		}
 		else if (obj instanceof String)
 		{
-			requestCreator = mPicasso.load((String) obj);
+			if (Pattern.matches(REGEX_URL, (String) obj))
+			{
+				/**
+				 * url
+				 */
+				requestCreator = mPicasso.load((String) obj);
+			}
+			else
+			{
+				/**
+				 * file
+				 */
+				requestCreator = mPicasso.load(new File((String) obj));
+			}
 		}
 		else
 		{
