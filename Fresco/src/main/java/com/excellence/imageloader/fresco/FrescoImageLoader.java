@@ -1,8 +1,10 @@
 package com.excellence.imageloader.fresco;
 
 import android.content.Context;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -11,7 +13,12 @@ import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.DraweeHolder;
+import com.facebook.drawee.view.DraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -80,9 +87,45 @@ public final class FrescoImageLoader implements ImageLoader
 
 		Uri uri = formatUri(obj);
 
-		if (view instanceof SimpleDraweeView)
+		GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(mContext.getResources());
+		// 全局占位图和错误图
+		if (mOptions.mPlaceholderResId != 0)
 		{
-			view.setImageURI(uri);
+			hierarchyBuilder.setPlaceholderImage(mOptions.mPlaceholderResId);
+		}
+		if (mOptions.mErrorResId != 0)
+		{
+			hierarchyBuilder.setFailureImage(mOptions.mErrorResId);
+		}
+
+		// 定制的占位图和错误图，同时有全局图时，以定制的为准
+		if (placeholderResId != 0)
+		{
+			hierarchyBuilder.setPlaceholderImage(placeholderResId);
+		}
+		if (errorResId != 0)
+		{
+			hierarchyBuilder.setFailureImage(errorResId);
+		}
+
+		if (view instanceof DraweeView)
+		{
+			DraweeHolder draweeHolder = DraweeHolder.create(hierarchyBuilder.build(), mContext);
+			DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(mOptions.isFade).setOldController(((DraweeView) view).getController())
+					.setControllerListener(new ImageLoaderListener(listener)).build();
+			draweeHolder.setController(controller);
+			view.setImageDrawable(draweeHolder.getTopLevelDrawable());
+		}
+		else
+		{
+			try
+			{
+				throw new RuntimeException("ImageView should be DraweeView!!!");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -237,5 +280,36 @@ public final class FrescoImageLoader implements ImageLoader
 	public void clearDiskCaches(Uri uri)
 	{
 		Fresco.getImagePipeline().evictFromDiskCache(uri);
+	}
+
+	private class ImageLoaderListener extends BaseControllerListener<ImageInfo>
+	{
+
+		private IListener mListener = null;
+
+		public ImageLoaderListener(IListener listener)
+		{
+			mListener = listener;
+		}
+
+		@Override
+		public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable)
+		{
+			super.onFinalImageSet(id, imageInfo, animatable);
+			if (mListener != null)
+			{
+				mListener.onSuccess();
+			}
+		}
+
+		@Override
+		public void onFailure(String id, Throwable throwable)
+		{
+			super.onFailure(id, throwable);
+			if (mListener != null)
+			{
+				mListener.onError();
+			}
+		}
 	}
 }
