@@ -88,3 +88,19 @@ Glide.with(getContext())
 ## [Volley](https://github.com/google/volley/)
 
 
+## 感谢
+
+> - [ladingwu][ladingwu]
+> - [hpdx][hpdx]
+
+[ladingwu]:https://github.com/ladingwu/ImageLoaderFramework
+[hpdx]:https://github.com/hpdx/fresco-helper
+
+
+<!--
+
+1.options也选用策略模式
+
+2.创建图片选择器
+
+-->
