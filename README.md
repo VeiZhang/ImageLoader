@@ -15,8 +15,27 @@
 * 自定义缓存目录、大小
 * 清除缓存
 
-权限
+## 使用
 
+[![imageloader][icon_imageloader]][imageloader]
+
+[![imageloader-fresco][icon_imageloader-fresco]][imageloader-fresco]
+
+[![imageloader-picasso][icon_imageloader-picasso]][imageloader-picasso]
+
+[![imageloader-glide][icon_imageloader-glide]][imageloader-glide]
+
+
+**独立依赖库**
+```
+implementation 'com.excellence:imageloader:_latestVersion'
+// 下面图库三选一，减小安装包大小
+implementation 'com.excellence:imageloader-fresco:_latestVersion'
+implementation 'com.excellence:imageloader-picasso:_latestVersion'
+implementation 'com.excellence:imageloader-glide:_latestVersion'
+```
+
+权限
 ```
 <uses-permission android:name="android.permission.INTERNET"/>
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -95,8 +114,22 @@ Glide.with(getContext())
 > - [ladingwu][ladingwu]
 > - [hpdx][hpdx]
 
+
+<!-- 引用网站链接 -->
+
+[imageloader]:https://bintray.com/veizhang/maven/imageloader/_latestVersion "imageloader"
+[imageloader-fresco]:https://bintray.com/veizhang/maven/imageloader-fresco/_latestVersion "imageloader-fresco"
+[imageloader-picasso]:https://bintray.com/veizhang/maven/imageloader-picasso/_latestVersion "imageloader-picasso"
+[imageloader-glide]:https://bintray.com/veizhang/maven/imageloader-glide/_latestVersion "imageloader-glide"
 [ladingwu]:https://github.com/ladingwu/ImageLoaderFramework
 [hpdx]:https://github.com/hpdx/fresco-helper
+
+<!-- 图片链接 -->
+
+[icon_imageloader]:https://api.bintray.com/packages/veizhang/maven/imageloader/images/download.svg
+[icon_imageloader-fresco]:https://api.bintray.com/packages/veizhang/maven/imageloader-fresco/images/download.svg
+[icon_imageloader-picasso]:https://api.bintray.com/packages/veizhang/maven/imageloader-picasso/images/download.svg
+[icon_imageloader-glide]:https://api.bintray.com/packages/veizhang/maven/imageloader-glide/images/download.svg
 
 
 <!--
