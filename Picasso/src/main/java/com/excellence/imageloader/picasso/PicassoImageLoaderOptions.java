@@ -1,4 +1,6 @@
-package com.excellence.imageloader;
+package com.excellence.imageloader.picasso;
+
+import com.excellence.imageloader.ImageLoaderOptions;
 
 import android.support.annotation.DrawableRes;
 
@@ -6,24 +8,14 @@ import android.support.annotation.DrawableRes;
  * <pre>
  *     author : VeiZhang
  *     blog   : http://tiimor.cn
- *     time   : 2018/6/21
- *     desc   : 设置参数
+ *     time   : 2018/10/10
+ *     desc   : Picasso图片加载器参数
  * </pre> 
  */
-public class ImageLoaderOptions
+public class PicassoImageLoaderOptions extends ImageLoaderOptions
 {
 
-	public int mPlaceholderResId;
-	public int mErrorResId;
-	public boolean isLogEnable = false;
-	public boolean isFade = true;
-	public boolean isCache = true;
-
-	protected ImageLoaderOptions()
-	{
-	}
-
-	protected ImageLoaderOptions(Builder builder)
+	private PicassoImageLoaderOptions(Builder builder)
 	{
 		mPlaceholderResId = builder.mPlaceholderResId;
 		mErrorResId = builder.mErrorResId;
@@ -85,9 +77,10 @@ public class ImageLoaderOptions
 			return this;
 		}
 
-		public ImageLoaderOptions build()
+		public PicassoImageLoaderOptions build()
 		{
-			return new ImageLoaderOptions(this);
+			return new PicassoImageLoaderOptions(this);
 		}
 	}
+
 }

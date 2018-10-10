@@ -10,6 +10,7 @@ import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
 import com.excellence.imageloader.picasso.PicassoImageLoader;
+import com.excellence.imageloader.picasso.PicassoImageLoaderOptions;
 import com.excellence.imageloader.sample.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity
@@ -22,8 +23,8 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		ImageLoaderOptions options = new ImageLoaderOptions.Builder().isLogEnable(true).isCache(false).build();
-		mImageLoader = new PicassoImageLoader(options);
+		ImageLoaderOptions options = new PicassoImageLoaderOptions.Builder().isLogEnable(true).isCache(false).build();
+		mImageLoader = new PicassoImageLoader((PicassoImageLoaderOptions) options);
 
 		super.onCreate(savedInstanceState);
 		mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);

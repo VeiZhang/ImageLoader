@@ -1,29 +1,21 @@
-package com.excellence.imageloader;
+package com.excellence.imageloader.glide;
 
 import android.support.annotation.DrawableRes;
+
+import com.excellence.imageloader.ImageLoaderOptions;
 
 /**
  * <pre>
  *     author : VeiZhang
  *     blog   : http://tiimor.cn
- *     time   : 2018/6/21
- *     desc   : 设置参数
+ *     time   : 2018/10/10
+ *     desc   : Glide图片加载器参数
  * </pre> 
  */
-public class ImageLoaderOptions
+public class GlideImageLoaderOptions extends ImageLoaderOptions
 {
 
-	public int mPlaceholderResId;
-	public int mErrorResId;
-	public boolean isLogEnable = false;
-	public boolean isFade = true;
-	public boolean isCache = true;
-
-	protected ImageLoaderOptions()
-	{
-	}
-
-	protected ImageLoaderOptions(Builder builder)
+	private GlideImageLoaderOptions(Builder builder)
 	{
 		mPlaceholderResId = builder.mPlaceholderResId;
 		mErrorResId = builder.mErrorResId;
@@ -85,9 +77,10 @@ public class ImageLoaderOptions
 			return this;
 		}
 
-		public ImageLoaderOptions build()
+		public GlideImageLoaderOptions build()
 		{
-			return new ImageLoaderOptions(this);
+			return new GlideImageLoaderOptions(this);
 		}
 	}
+
 }

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.excellence.imageloader.ImageLoader;
-import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -39,20 +38,20 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public final class FrescoImageLoader implements ImageLoader
 {
 	private Context mContext = null;
-	private ImageLoaderOptions mOptions = null;
+	private FrescoImageLoaderOptions mOptions = null;
 
 	public FrescoImageLoader(Context context)
 	{
 		this(context, null);
 	}
 
-	public FrescoImageLoader(Context context, ImageLoaderOptions options)
+	public FrescoImageLoader(Context context, FrescoImageLoaderOptions options)
 	{
 		mContext = context.getApplicationContext();
 		mOptions = options;
 		if (mOptions == null)
 		{
-			mOptions = new ImageLoaderOptions.Builder().build();
+			mOptions = new FrescoImageLoaderOptions.Builder().build();
 		}
 
 		Fresco.initialize(mContext);

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.excellence.imageloader.ImageLoader;
-import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
@@ -26,7 +25,7 @@ import java.io.File;
  */
 public final class PicassoImageLoader implements ImageLoader
 {
-	private ImageLoaderOptions mOptions = null;
+	private PicassoImageLoaderOptions mOptions = null;
 	private Picasso mPicasso = null;
 
 	public PicassoImageLoader()
@@ -34,25 +33,25 @@ public final class PicassoImageLoader implements ImageLoader
 		this(null);
 	}
 
-	public PicassoImageLoader(ImageLoaderOptions options)
+	public PicassoImageLoader(PicassoImageLoaderOptions options)
 	{
 		mOptions = options;
 		if (mOptions == null)
 		{
-			mOptions = new ImageLoaderOptions.Builder().build();
+			mOptions = new PicassoImageLoaderOptions.Builder().build();
 		}
 
 		mPicasso = Picasso.get();
 
 		// 开启打印
-		mPicasso.setLoggingEnabled(options.isLogEnable);
+		mPicasso.setLoggingEnabled(mOptions.isLogEnable);
 		/**
 		 * 开启指示
 		 * 蓝色：从内存中获取，性能最佳
 		 * 绿色：从本地获取，性能一般
 		 * 红色：从网络加载，性能最差
 		 */
-		mPicasso.setIndicatorsEnabled(options.isLogEnable);
+		mPicasso.setIndicatorsEnabled(mOptions.isLogEnable);
 	}
 
 	private RequestCreator load(@NonNull Object obj, int placeholderResId, int errorResId)

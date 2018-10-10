@@ -15,7 +15,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.excellence.imageloader.ImageLoader;
-import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
 import com.excellence.imageloader.glide.utils.GlideApp;
 import com.excellence.imageloader.glide.utils.GlideRequest;
@@ -35,20 +34,20 @@ import java.io.File;
 public final class GlideImageLoader implements ImageLoader
 {
 	private Context mContext = null;
-	private ImageLoaderOptions mOptions = null;
+	private GlideImageLoaderOptions mOptions = null;
 
 	public GlideImageLoader(Context context)
 	{
 		this(context, null);
 	}
 
-	public GlideImageLoader(Context context, ImageLoaderOptions options)
+	public GlideImageLoader(Context context, GlideImageLoaderOptions options)
 	{
 		mContext = context.getApplicationContext();
 		mOptions = options;
 		if (mOptions == null)
 		{
-			mOptions = new ImageLoaderOptions.Builder().build();
+			mOptions = new GlideImageLoaderOptions.Builder().build();
 		}
 	}
 
