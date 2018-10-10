@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
+import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -24,6 +25,15 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  *     time   : 2018/6/27
  *     desc   : Fresco图片加载器
  *     			https://github.com/facebook/fresco
+ *
+ *     			图片类型
+ *     			  Type        |          Scheme         |  Sample
+ *     		 	http远程图片   |     http://或者https:// |  HttpURLConnection或者OkHttp
+ *     			本地文件       |     file://             |  FileInputStream
+ *     		Content provider  |     content://          |  ContentResolver
+ *     		res目录下的资源 	  |     res://              |  Resources.openRawResource
+ *     		asset目录下的资源  |     asset://            |  AssetManager
+ *     		Uri中指定图片数据  |  data:mime/type;base64  |  数据类型必须符合rfc2397规定 (仅支持 UTF-8)
  * </pre> 
  */
 public final class FrescoImageLoader implements ImageLoader
@@ -46,6 +56,10 @@ public final class FrescoImageLoader implements ImageLoader
 		}
 
 		Fresco.initialize(mContext);
+		if (options.isLogEnable)
+		{
+			FLog.setMinimumLoggingLevel(FLog.DEBUG);
+		}
 	}
 
 	private void load(@NonNull ImageView view, Object obj, int placeholderResId, int errorResId, IListener listener)
@@ -61,7 +75,17 @@ public final class FrescoImageLoader implements ImageLoader
 		}
 		view.setLayoutParams(params);
 
-		Uri uri = null;
+		Uri uri = formatUri(obj);
+
+		if (view instanceof SimpleDraweeView)
+		{
+			view.setImageURI(uri);
+		}
+	}
+
+	public Uri formatUri(Object obj)
+	{
+		Uri uri;
 		if (obj instanceof Integer)
 		{
 			uri = Uri.parse("res://com.excellence.imageloader/" + obj);
@@ -78,11 +102,7 @@ public final class FrescoImageLoader implements ImageLoader
 		{
 			uri = Uri.EMPTY;
 		}
-
-		if (view instanceof SimpleDraweeView)
-		{
-			view.setImageURI(uri);
-		}
+		return uri;
 	}
 
 	@Override
@@ -160,6 +180,46 @@ public final class FrescoImageLoader implements ImageLoader
 	@Override
 	public void clearCache()
 	{
+		Fresco.getImagePipeline().clearCaches();
+	}
 
+	public void clearMemoryCaches()
+	{
+		Fresco.getImagePipeline().clearMemoryCaches();
+	}
+
+	public void clearDiskCaches()
+	{
+		Fresco.getImagePipeline().clearDiskCaches();
+	}
+
+	/**
+	 * @see #formatUri(Object) 
+	 *
+	 * @param uri
+	 */
+	public void clearCache(Uri uri)
+	{
+		Fresco.getImagePipeline().evictFromCache(uri);
+	}
+
+	/**
+	 * @see #formatUri(Object)
+	 *
+	 * @param uri
+	 */
+	public void clearMemoryCaches(Uri uri)
+	{
+		Fresco.getImagePipeline().evictFromMemoryCache(uri);
+	}
+
+	/**
+	 * @see #formatUri(Object)
+	 *
+	 * @param uri
+	 */
+	public void clearDiskCaches(Uri uri)
+	{
+		Fresco.getImagePipeline().evictFromDiskCache(uri);
 	}
 }
