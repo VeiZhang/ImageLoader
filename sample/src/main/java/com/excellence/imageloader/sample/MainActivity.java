@@ -17,10 +17,14 @@ public class MainActivity extends AppCompatActivity
 	public static final String TAG = MainActivity.class.getSimpleName();
 
 	private ActivityMainBinding mBinding = null;
+	private ImageLoader mImageLoader = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		ImageLoaderOptions options = new ImageLoaderOptions.Builder().isLogEnable(true).isCache(false).build();
+		mImageLoader = new PicassoImageLoader(options);
+
 		super.onCreate(savedInstanceState);
 		mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -35,17 +39,15 @@ public class MainActivity extends AppCompatActivity
 		int error = R.drawable.error;
 		String url = "https://raw.githubusercontent.com/VeiZhang/veizhang.github.io/master/uploads/tiimor.png";
 
-		ImageLoaderOptions options = new ImageLoaderOptions.Builder().isLogEnable(true).isCache(false).build();
-		ImageLoader imageLoader = new PicassoImageLoader(options);
 		/**
 		 * Picasso加载资源图片
 		 */
-		// imageLoader.loadImage(imageView, success, placeholder, error);
+		// mImageLoader.loadImage(imageView, success, placeholder, error);
 
 		/**
 		 * Picasso加载网络图片
 		 */
-		imageLoader.loadImage(imageView, url, placeholder, error, new IListener()
+		mImageLoader.loadImage(imageView, url, placeholder, error, new IListener()
 		{
 			@Override
 			public void onProgress()
@@ -69,6 +71,6 @@ public class MainActivity extends AppCompatActivity
 		/**
 		 * Picasso加载本地图片
 		 */
-		// imageLoader.loadImage(imageView, new File("/sdcard/icon.jpg"), placeholder, error);
+		// mImageLoader.loadImage(imageView, new File("/sdcard/icon.jpg"), placeholder, error);
 	}
 }
