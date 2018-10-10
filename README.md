@@ -1,12 +1,14 @@
 # 图片加载器
 
-封装统一的图片加载架构，随意切换加载框架
+## 统一管理图片加载库，随意切换图片加载框架
 
 * Fresco
 * Picasso
 * Glide
 * Universal-ImageLoader
 * Volley
+
+## 封装
 
 * 多个图片加载库切换
 * 图片加载进度回调
