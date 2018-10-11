@@ -14,6 +14,7 @@ import com.excellence.imageloader.listener.IListener;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeHolder;
@@ -72,7 +73,7 @@ public final class FrescoImageLoader implements ImageLoader
 		}
 	}
 
-	private void load(@NonNull ImageView view, Object obj, int placeholderResId, int errorResId, IListener listener)
+	private void load(@NonNull ImageView view, Object obj, int placeholderResId, int errorResId, final IListener listener)
 	{
 		ViewGroup.LayoutParams params = view.getLayoutParams();
 		if (params.width == WRAP_CONTENT)
@@ -107,6 +108,26 @@ public final class FrescoImageLoader implements ImageLoader
 		{
 			hierarchyBuilder.setFailureImage(errorResId);
 		}
+
+		hierarchyBuilder.setProgressBarImage(new ProgressBarDrawable()
+		{
+			@Override
+			protected boolean onLevelChange(int level)
+			{
+				// level is on a scale of 0-10,000
+				// where 10,000 means fully downloaded
+
+				// your app's logic to change the drawable's
+				// appearance here based on progress
+
+				if (listener != null)
+				{
+					listener.onProgress();
+				}
+
+				return super.onLevelChange(level);
+			}
+		});
 
 		if (view instanceof DraweeView)
 		{
