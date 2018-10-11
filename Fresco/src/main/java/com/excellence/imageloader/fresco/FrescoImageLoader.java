@@ -5,7 +5,9 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.CircularProgressDrawable;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -14,12 +16,11 @@ import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeHolder;
-import com.facebook.drawee.view.DraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 
 import java.io.File;
@@ -76,19 +77,6 @@ public final class FrescoImageLoader implements ImageLoader
 
 	private void load(@NonNull ImageView view, Object obj, int placeholderResId, int errorResId, final IListener listener)
 	{
-		if (!(view instanceof DraweeView))
-		{
-			try
-			{
-				throw new RuntimeException("ImageView should be DraweeView!!!");
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			return;
-		}
-
 		ViewGroup.LayoutParams params = view.getLayoutParams();
 		if (params.width == WRAP_CONTENT)
 		{
@@ -102,9 +90,7 @@ public final class FrescoImageLoader implements ImageLoader
 
 		Uri uri = formatUri(obj);
 
-		/**
-		 * 关闭缓存，由于Fresco没有关闭缓存的设置，因此只能使用该方式
-		 */
+		// 关闭缓存，由于Fresco没有关闭缓存的设置，因此只能使用该方式
 		if (!mOptions.isCache)
 		{
 			clearCache(uri);
@@ -132,6 +118,7 @@ public final class FrescoImageLoader implements ImageLoader
 		}
 
 		final ImageLoaderListener imageLoaderListener = new ImageLoaderListener(listener);
+		// 自定义加载进度条，监听加载进度
 		hierarchyBuilder.setProgressBarImage(new CircularProgressDrawable(mContext)
 		{
 			@Override
@@ -149,10 +136,35 @@ public final class FrescoImageLoader implements ImageLoader
 			}
 		});
 
-		DraweeHolder draweeHolder = DraweeHolder.create(hierarchyBuilder.build(), mContext);
-		DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(mOptions.isFade).setOldController(((DraweeView) view).getController())
-				.setControllerListener(imageLoaderListener).build();
+		// 拿取标识
+		DraweeHolder draweeHolder = (DraweeHolder) view.getTag(R.id.fresco_drawee);
+		PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(mOptions.isFade).setControllerListener(imageLoaderListener);
+		DraweeController controller;
+		if (draweeHolder == null)
+		{
+			draweeHolder = DraweeHolder.create(hierarchyBuilder.build(), mContext);
+			controller = controllerBuilder.build();
+		}
+		else
+		{
+			controller = controllerBuilder.setOldController(draweeHolder.getController()).build();
+		}
+		// 请求
 		draweeHolder.setController(controller);
+
+		// 生命周期
+		ViewStateListener viewStateListener = new ViewStateListener(draweeHolder);
+		view.addOnAttachStateChangeListener(viewStateListener);
+
+		// 判断是否ImageView已经 attachToWindow
+		if (ViewCompat.isAttachedToWindow(view))
+		{
+			draweeHolder.onAttach();
+		}
+
+		// 保证每一个ImageView中只存在一个draweeHolder
+		view.setTag(R.id.fresco_drawee, draweeHolder);
+
 		view.setImageDrawable(draweeHolder.getTopLevelDrawable());
 	}
 
@@ -171,16 +183,12 @@ public final class FrescoImageLoader implements ImageLoader
 		{
 			if (Pattern.matches(REGEX_URL, (String) obj))
 			{
-				/**
-				 * url
-				 */
+				// url
 				uri = Uri.parse((String) obj);
 			}
 			else
 			{
-				/**
-				 * file
-				 */
+				// file
 				uri = Uri.parse("file://" + obj);
 			}
 		}
@@ -307,6 +315,29 @@ public final class FrescoImageLoader implements ImageLoader
 	public void clearDiskCaches(Uri uri)
 	{
 		Fresco.getImagePipeline().evictFromDiskCache(uri);
+	}
+
+	private class ViewStateListener implements View.OnAttachStateChangeListener
+	{
+
+		private DraweeHolder mDraweeHolder = null;
+
+		public ViewStateListener(DraweeHolder draweeHolder)
+		{
+			mDraweeHolder = draweeHolder;
+		}
+
+		@Override
+		public void onViewAttachedToWindow(View v)
+		{
+			mDraweeHolder.onAttach();
+		}
+
+		@Override
+		public void onViewDetachedFromWindow(View v)
+		{
+			mDraweeHolder.onDetach();
+		}
 	}
 
 	private class ImageLoaderListener extends BaseControllerListener<ImageInfo> implements IListener

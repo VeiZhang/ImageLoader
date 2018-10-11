@@ -8,8 +8,8 @@ import android.widget.ImageView;
 
 import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
+import com.excellence.imageloader.fresco.FrescoImageLoader;
 import com.excellence.imageloader.listener.IListener;
-import com.excellence.imageloader.picasso.PicassoImageLoader;
 import com.excellence.imageloader.sample.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		ImageLoaderOptions options = new ImageLoaderOptions.Builder().isLogEnable(true).isCache(false).build();
-		mImageLoader = new PicassoImageLoader(this, options);
+		mImageLoader = new FrescoImageLoader(this, options);
 
 		super.onCreate(savedInstanceState);
 		mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
