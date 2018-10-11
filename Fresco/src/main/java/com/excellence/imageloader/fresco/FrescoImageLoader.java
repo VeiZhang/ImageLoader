@@ -75,6 +75,19 @@ public final class FrescoImageLoader implements ImageLoader
 
 	private void load(@NonNull ImageView view, Object obj, int placeholderResId, int errorResId, final IListener listener)
 	{
+		if (!(view instanceof DraweeView))
+		{
+			try
+			{
+				throw new RuntimeException("ImageView should be DraweeView!!!");
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return;
+		}
+
 		ViewGroup.LayoutParams params = view.getLayoutParams();
 		if (params.width == WRAP_CONTENT)
 		{
@@ -129,25 +142,11 @@ public final class FrescoImageLoader implements ImageLoader
 			}
 		});
 
-		if (view instanceof DraweeView)
-		{
-			DraweeHolder draweeHolder = DraweeHolder.create(hierarchyBuilder.build(), mContext);
-			DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(mOptions.isFade).setOldController(((DraweeView) view).getController())
-					.setControllerListener(new ImageLoaderListener(listener)).build();
-			draweeHolder.setController(controller);
-			view.setImageDrawable(draweeHolder.getTopLevelDrawable());
-		}
-		else
-		{
-			try
-			{
-				throw new RuntimeException("ImageView should be DraweeView!!!");
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+		DraweeHolder draweeHolder = DraweeHolder.create(hierarchyBuilder.build(), mContext);
+		DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(mOptions.isFade).setOldController(((DraweeView) view).getController())
+				.setControllerListener(new ImageLoaderListener(listener)).build();
+		draweeHolder.setController(controller);
+		view.setImageDrawable(draweeHolder.getTopLevelDrawable());
 	}
 
 	public Uri formatUri(Object obj)
