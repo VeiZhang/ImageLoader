@@ -17,9 +17,6 @@ import com.bumptech.glide.request.target.Target;
 import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
-import com.excellence.imageloader.glide.utils.GlideApp;
-import com.excellence.imageloader.glide.utils.GlideRequest;
-import com.excellence.imageloader.glide.utils.GlideRequests;
 
 import java.io.File;
 
@@ -52,7 +49,7 @@ public final class GlideImageLoader implements ImageLoader
 		}
 	}
 
-	private RequestBuilder<Drawable> load(@NonNull Object obj, int placeholderResId, int errorResId)
+	private void load(@NonNull ImageView view, Object obj, int placeholderResId, int errorResId, IListener listener)
 	{
 		GlideRequests glideRequests = GlideApp.with(mContext);
 		GlideRequest<Drawable> glideRequest = glideRequests.load(obj);
@@ -90,7 +87,8 @@ public final class GlideImageLoader implements ImageLoader
 			glideRequest.diskCacheStrategy(DiskCacheStrategy.NONE);
 		}
 
-		return glideRequest;
+		ProgressInterceptor.addListener(obj.toString(), listener);
+		glideRequest.listener(new ImageLoaderListener(listener)).into(view);
 	}
 
 	@Override
@@ -114,7 +112,7 @@ public final class GlideImageLoader implements ImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId, IListener listener)
 	{
-		load(resId, placeholderResId, errorResId).listener(new ImageLoaderListener(listener)).into(view);
+		load(view, resId, placeholderResId, errorResId, listener);
 	}
 
 	@Override
@@ -138,7 +136,7 @@ public final class GlideImageLoader implements ImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId, IListener listener)
 	{
-		load(file, placeholderResId, errorResId).listener(new ImageLoaderListener(listener)).into(view);
+		load(view, file, placeholderResId, errorResId, listener);
 	}
 
 	@Override
@@ -162,7 +160,7 @@ public final class GlideImageLoader implements ImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId, IListener listener)
 	{
-		load(url, placeholderResId, errorResId).listener(new ImageLoaderListener(listener)).into(view);
+		load(view, url, placeholderResId, errorResId, listener);
 	}
 
 	@Override
@@ -184,6 +182,7 @@ public final class GlideImageLoader implements ImageLoader
 		@Override
 		public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource)
 		{
+			ProgressInterceptor.removeListener(model.toString());
 			if (mListener != null)
 			{
 				mListener.onError();
@@ -194,6 +193,7 @@ public final class GlideImageLoader implements ImageLoader
 		@Override
 		public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource)
 		{
+			ProgressInterceptor.removeListener(model.toString());
 			if (mListener != null)
 			{
 				mListener.onSuccess();
