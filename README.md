@@ -26,22 +26,105 @@
 [![imageloader-glide][icon_imageloader-glide]][imageloader-glide]
 
 
-**独立依赖库**
-```
-implementation 'com.excellence:imageloader:_latestVersion'
-// 下面图库三选一，减小安装包大小
-implementation 'com.excellence:imageloader-fresco:_latestVersion'
-implementation 'com.excellence:imageloader-picasso:_latestVersion'
-implementation 'com.excellence:imageloader-glide:_latestVersion'
-```
+* **独立依赖库**
+    ```
+    implementation 'com.excellence:imageloader:_latestVersion'
+    // 下面图库三选一，减小安装包大小
+    implementation 'com.excellence:imageloader-fresco:_latestVersion'
+    implementation 'com.excellence:imageloader-picasso:_latestVersion'
+    implementation 'com.excellence:imageloader-glide:_latestVersion'
+    ```
 
-权限
-```
-<uses-permission android:name="android.permission.INTERNET"/>
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-```
+* 权限
+    ```
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    ```
+
+* API
+    ```
+    // 初始化，不同的加载器，有部分独立的方法
+    // 可以自定义实现ImageLoader接口，创建新的图库加载器
+    ImageLoaderOptions options = new ImageLoaderOptions.Builder().isLogEnable(true).isCache(false).build();
+    mImageLoader = new FrescoImageLoader(this, options);
+    mImageLoader = new PicassoImageLoader(this, options);
+    mImageLoader = new GlideImageLoader(this, options);
+
+    // 统一的接口
+    public interface ImageLoader
+    {
+        /**
+         * 加载资源图片
+         *
+         * @param view
+         * @param resId
+         */
+        void loadImage(@NonNull ImageView view, @DrawableRes int resId);
+
+        void loadImage(@NonNull ImageView view, @DrawableRes int resId, IListener listener);
+
+        /**
+         * 加载资源图片，占位图片，错误图片
+         *
+         * @param view
+         * @param resId
+         * @param placeholderResId
+         * @param errorResId
+         */
+        void loadImage(@NonNull ImageView view, @DrawableRes int resId, @DrawableRes int placeholderResId, @DrawableRes int errorResId);
+
+        void loadImage(@NonNull ImageView view, @DrawableRes int resId, @DrawableRes int placeholderResId, @DrawableRes int errorResId, IListener listener);
+
+        /**
+         * 加载本地图片
+         *
+         * @param view
+         * @param file
+         */
+        void loadImage(@NonNull ImageView view, @NonNull File file);
+
+        void loadImage(@NonNull ImageView view, @NonNull File file, IListener listener);
+
+        /**
+         * 加载本地图片，占位图片，错误图片
+         *
+         * @param view
+         * @param file
+         * @param placeholderResId
+         * @param errorResId
+         */
+        void loadImage(@NonNull ImageView view, @NonNull File file, @DrawableRes int placeholderResId, @DrawableRes int errorResId);
+
+        void loadImage(@NonNull ImageView view, @NonNull File file, @DrawableRes int placeholderResId, @DrawableRes int errorResId, IListener listener);
+
+        /**
+         * 加载网络图片
+         *
+         * @param view
+         * @param url
+         */
+        void loadImage(@NonNull ImageView view, @NonNull String url);
+
+        void loadImage(@NonNull ImageView view, @NonNull String url, IListener listener);
+
+        /**
+         * 加载网络图片，占位图片，错误图片
+         *
+         * @param view
+         * @param url
+         * @param placeholderResId
+         * @param errorResId
+         */
+        void loadImage(@NonNull ImageView view, @NonNull String url, @DrawableRes int placeholderResId, @DrawableRes int errorResId);
+
+        void loadImage(@NonNull ImageView view, @NonNull String url, @DrawableRes int placeholderResId, @DrawableRes int errorResId, IListener listener);
+
+        void clearCache();
+    }
+    ```
+
 
 ## [Fresco](https://github.com/facebook/fresco/)
 
@@ -109,10 +192,12 @@ Glide.with(getContext())
 ## [Volley](https://github.com/google/volley/)
 
 
+
 ## 感谢
 
 > - [ladingwu][ladingwu]
 > - [hpdx][hpdx]
+> - [peng8350][peng8350]
 
 
 <!-- 引用网站链接 -->
@@ -123,6 +208,7 @@ Glide.with(getContext())
 [imageloader-glide]:https://bintray.com/veizhang/maven/imageloader-glide/_latestVersion "imageloader-glide"
 [ladingwu]:https://github.com/ladingwu/ImageLoaderFramework
 [hpdx]:https://github.com/hpdx/fresco-helper
+[peng8350]:https://github.com/peng8350/LoadingProgress
 
 <!-- 图片链接 -->
 
