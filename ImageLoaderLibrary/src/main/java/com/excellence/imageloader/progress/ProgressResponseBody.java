@@ -1,8 +1,8 @@
-package com.excellence.imageloader.glide;
-
-import com.excellence.imageloader.listener.IListener;
+package com.excellence.imageloader.progress;
 
 import java.io.IOException;
+
+import com.excellence.imageloader.listener.IListener;
 
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
@@ -12,7 +12,7 @@ import okio.ForwardingSource;
 import okio.Okio;
 import okio.Source;
 
-import static com.excellence.imageloader.glide.ProgressInterceptor.LISTENER_LIST;
+import static com.excellence.imageloader.progress.ProgressInterceptor.LISTENER_LIST;
 
 /**
  * <pre>

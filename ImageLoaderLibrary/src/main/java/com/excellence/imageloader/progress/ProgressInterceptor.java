@@ -1,10 +1,10 @@
-package com.excellence.imageloader.glide;
-
-import com.excellence.imageloader.listener.IListener;
+package com.excellence.imageloader.progress;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.excellence.imageloader.listener.IListener;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -19,16 +19,16 @@ import okhttp3.ResponseBody;
  *     desc   : 拦截器监听进度 https://github.com/square/okhttp/blob/master/samples/guide/src/main/java/okhttp3/recipes/Progress.java
  * </pre> 
  */
-class ProgressInterceptor implements Interceptor
+public final class ProgressInterceptor implements Interceptor
 {
 	static final Map<String, IListener> LISTENER_LIST = new HashMap<>();
 
-	static void addListener(String url, IListener listener)
+	public static void addListener(String url, IListener listener)
 	{
 		LISTENER_LIST.put(url, listener);
 	}
 
-	static void removeListener(String url)
+	public static void removeListener(String url)
 	{
 		LISTENER_LIST.remove(url);
 	}

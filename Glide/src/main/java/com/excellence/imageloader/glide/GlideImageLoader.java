@@ -16,6 +16,7 @@ import com.bumptech.glide.request.target.Target;
 import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
+import com.excellence.imageloader.progress.ProgressInterceptor;
 
 import java.io.File;
 

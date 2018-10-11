@@ -9,14 +9,18 @@ import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
 import com.excellence.imageloader.listener.Listener;
+import com.excellence.imageloader.progress.ProgressInterceptor;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 import java.util.regex.Pattern;
+
+import okhttp3.OkHttpClient;
 
 /**
  * <pre>
@@ -47,7 +51,11 @@ public final class PicassoImageLoader implements ImageLoader
 			mOptions = new ImageLoaderOptions.Builder().build();
 		}
 
-		mPicasso = Picasso.get();
+		OkHttpClient.Builder builder = new OkHttpClient.Builder();
+		builder.addInterceptor(new ProgressInterceptor());
+		OkHttpClient okHttpClient = builder.build();
+		OkHttp3Downloader downloader = new OkHttp3Downloader(okHttpClient);
+		mPicasso = new Picasso.Builder(context).downloader(downloader).build();
 
 		// 开启打印
 		mPicasso.setLoggingEnabled(options.isLogEnable);
@@ -127,7 +135,10 @@ public final class PicassoImageLoader implements ImageLoader
 			requestCreator.networkPolicy(NetworkPolicy.NO_CACHE);
 		}
 
-		requestCreator.into(view, new ImageLoaderListener(listener));
+		final String url = obj.toString();
+		ImageLoaderListener imageLoaderListener = new ImageLoaderListener(url, listener);
+		ProgressInterceptor.addListener(url, imageLoaderListener);
+		requestCreator.into(view, imageLoaderListener);
 	}
 
 	@Override
@@ -231,10 +242,12 @@ public final class PicassoImageLoader implements ImageLoader
 
 	private class ImageLoaderListener extends Listener implements Callback
 	{
+		private String mUrl = null;
 		private IListener mListener = null;
 
-		public ImageLoaderListener(IListener listener)
+		public ImageLoaderListener(String url, IListener listener)
 		{
+			mUrl = url;
 			mListener = listener;
 		}
 
@@ -250,6 +263,7 @@ public final class PicassoImageLoader implements ImageLoader
 		@Override
 		public void onSuccess()
 		{
+			ProgressInterceptor.removeListener(mUrl);
 			if (mListener != null)
 			{
 				mListener.onSuccess();
@@ -259,6 +273,7 @@ public final class PicassoImageLoader implements ImageLoader
 		@Override
 		public void onError(Exception e)
 		{
+			ProgressInterceptor.removeListener(mUrl);
 			if (mListener != null)
 			{
 				mListener.onError(e);
