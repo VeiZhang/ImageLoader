@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
+import com.excellence.imageloader.progress.ProgressInterceptor;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
@@ -21,10 +22,14 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeHolder;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.ImageInfo;
 
 import java.io.File;
 import java.util.regex.Pattern;
+
+import okhttp3.OkHttpClient;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -68,7 +73,13 @@ public final class FrescoImageLoader implements ImageLoader
 			mOptions = new ImageLoaderOptions.Builder().build();
 		}
 
-		Fresco.initialize(mContext);
+		OkHttpClient.Builder builder = new OkHttpClient.Builder();
+		builder.addInterceptor(new ProgressInterceptor());
+		OkHttpClient okHttpClient = builder.build();
+		ImagePipelineConfig imagePipelineConfig = OkHttpImagePipelineConfigFactory.newBuilder(mContext, okHttpClient).build();
+
+		Fresco.initialize(mContext, imagePipelineConfig);
+
 		if (options.isLogEnable)
 		{
 			FLog.setMinimumLoggingLevel(FLog.DEBUG);
@@ -117,24 +128,10 @@ public final class FrescoImageLoader implements ImageLoader
 			hierarchyBuilder.setFailureImage(errorResId);
 		}
 
-		final ImageLoaderListener imageLoaderListener = new ImageLoaderListener(listener);
-		// 自定义加载进度条，监听加载进度
-		hierarchyBuilder.setProgressBarImage(new CircularProgressDrawable(mContext)
-		{
-			@Override
-			protected boolean onLevelChange(int level)
-			{
-				// level is on a scale of 0-10,000
-				// where 10,000 means fully downloaded
-
-				// your app's logic to change the drawable's
-				// appearance here based on progress
-
-				imageLoaderListener.onProgress(level, 10000);
-
-				return super.onLevelChange(level);
-			}
-		});
+		// 监听加载进度
+		final String url = uri.toString();
+		final ImageLoaderListener imageLoaderListener = new ImageLoaderListener(url, listener);
+		ProgressInterceptor.addListener(url, imageLoaderListener);
 
 		// 拿取标识
 		DraweeHolder draweeHolder = (DraweeHolder) view.getTag(R.id.fresco_drawee);
@@ -343,10 +340,12 @@ public final class FrescoImageLoader implements ImageLoader
 	private class ImageLoaderListener extends BaseControllerListener<ImageInfo> implements IListener
 	{
 
+		private String mUrl = null;
 		private IListener mListener = null;
 
-		public ImageLoaderListener(IListener listener)
+		public ImageLoaderListener(String url, IListener listener)
 		{
+			mUrl = url;
 			mListener = listener;
 		}
 
@@ -354,6 +353,7 @@ public final class FrescoImageLoader implements ImageLoader
 		public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable)
 		{
 			super.onFinalImageSet(id, imageInfo, animatable);
+			ProgressInterceptor.removeListener(mUrl);
 			onSuccess();
 		}
 
@@ -361,6 +361,7 @@ public final class FrescoImageLoader implements ImageLoader
 		public void onFailure(String id, Throwable throwable)
 		{
 			super.onFailure(id, throwable);
+			ProgressInterceptor.removeListener(mUrl);
 			onError(throwable);
 		}
 

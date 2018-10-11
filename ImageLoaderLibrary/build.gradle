@@ -23,7 +23,7 @@ android {
     lintOptions {
         abortOnError false
     }
-    
+
 }
 
 dependencies {
@@ -35,6 +35,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compileOnly 'com.squareup.picasso:picasso:2.71828'
     compileOnly 'com.github.bumptech.glide:okhttp3-integration:4.8.0'
+    compileOnly 'com.facebook.fresco:imagepipeline-okhttp3:1.10.0'
 }
 
 /*********************上传jCenter依赖*********************/
