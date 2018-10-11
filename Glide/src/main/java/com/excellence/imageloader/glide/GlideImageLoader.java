@@ -87,8 +87,9 @@ public final class GlideImageLoader implements ImageLoader
 			glideRequest.diskCacheStrategy(DiskCacheStrategy.NONE);
 		}
 
-		ImageLoaderListener imageLoaderListener = new ImageLoaderListener(listener);
-		ProgressInterceptor.addListener(obj.toString(), imageLoaderListener);
+		final String url = obj.toString();
+		ImageLoaderListener imageLoaderListener = new ImageLoaderListener(url, listener);
+		ProgressInterceptor.addListener(url, imageLoaderListener);
 		glideRequest.listener(imageLoaderListener).into(view);
 	}
 
@@ -173,17 +174,19 @@ public final class GlideImageLoader implements ImageLoader
 
 	private class ImageLoaderListener implements RequestListener<Drawable>, IListener
 	{
+		private String mUrl = null;
 		private IListener mListener = null;
 
-		public ImageLoaderListener(IListener listener)
+		public ImageLoaderListener(String url, IListener listener)
 		{
+			mUrl = url;
 			mListener = listener;
 		}
 
 		@Override
 		public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource)
 		{
-			ProgressInterceptor.removeListener(model.toString());
+			ProgressInterceptor.removeListener(mUrl);
 			onError(e);
 			return false;
 		}
@@ -191,7 +194,7 @@ public final class GlideImageLoader implements ImageLoader
 		@Override
 		public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource)
 		{
-			ProgressInterceptor.removeListener(model.toString());
+			ProgressInterceptor.removeListener(mUrl);
 			onSuccess();
 			return false;
 		}
