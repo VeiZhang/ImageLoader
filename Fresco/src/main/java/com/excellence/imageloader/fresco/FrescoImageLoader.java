@@ -5,6 +5,7 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -101,6 +102,14 @@ public final class FrescoImageLoader implements ImageLoader
 
 		Uri uri = formatUri(obj);
 
+		/**
+		 * 关闭缓存，由于Fresco没有关闭缓存的设置，因此只能使用该方式
+		 */
+		if (!mOptions.isCache)
+		{
+			clearCache(uri);
+		}
+
 		GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(mContext.getResources());
 		// 全局占位图和错误图
 		if (mOptions.mPlaceholderResId != 0)
@@ -123,7 +132,7 @@ public final class FrescoImageLoader implements ImageLoader
 		}
 
 		final ImageLoaderListener imageLoaderListener = new ImageLoaderListener(listener);
-		hierarchyBuilder.setProgressBarImage(new ProgressBarDrawable()
+		hierarchyBuilder.setProgressBarImage(new CircularProgressDrawable(mContext)
 		{
 			@Override
 			protected boolean onLevelChange(int level)
