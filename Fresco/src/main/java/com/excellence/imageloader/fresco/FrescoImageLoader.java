@@ -122,6 +122,7 @@ public final class FrescoImageLoader implements ImageLoader
 			hierarchyBuilder.setFailureImage(errorResId);
 		}
 
+		final ImageLoaderListener imageLoaderListener = new ImageLoaderListener(listener);
 		hierarchyBuilder.setProgressBarImage(new ProgressBarDrawable()
 		{
 			@Override
@@ -133,10 +134,7 @@ public final class FrescoImageLoader implements ImageLoader
 				// your app's logic to change the drawable's
 				// appearance here based on progress
 
-				if (listener != null)
-				{
-					listener.onProgress();
-				}
+				imageLoaderListener.onProgress(level, 10000);
 
 				return super.onLevelChange(level);
 			}
@@ -144,7 +142,7 @@ public final class FrescoImageLoader implements ImageLoader
 
 		DraweeHolder draweeHolder = DraweeHolder.create(hierarchyBuilder.build(), mContext);
 		DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).setAutoPlayAnimations(mOptions.isFade).setOldController(((DraweeView) view).getController())
-				.setControllerListener(new ImageLoaderListener(listener)).build();
+				.setControllerListener(imageLoaderListener).build();
 		draweeHolder.setController(controller);
 		view.setImageDrawable(draweeHolder.getTopLevelDrawable());
 	}
@@ -302,7 +300,7 @@ public final class FrescoImageLoader implements ImageLoader
 		Fresco.getImagePipeline().evictFromDiskCache(uri);
 	}
 
-	private class ImageLoaderListener extends BaseControllerListener<ImageInfo>
+	private class ImageLoaderListener extends BaseControllerListener<ImageInfo> implements IListener
 	{
 
 		private IListener mListener = null;
@@ -316,6 +314,28 @@ public final class FrescoImageLoader implements ImageLoader
 		public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable)
 		{
 			super.onFinalImageSet(id, imageInfo, animatable);
+			onSuccess();
+		}
+
+		@Override
+		public void onFailure(String id, Throwable throwable)
+		{
+			super.onFailure(id, throwable);
+			onError(throwable);
+		}
+
+		@Override
+		public void onProgress(long current, long size)
+		{
+			if (mListener != null)
+			{
+				mListener.onProgress(current, size);
+			}
+		}
+
+		@Override
+		public void onSuccess()
+		{
 			if (mListener != null)
 			{
 				mListener.onSuccess();
@@ -323,12 +343,11 @@ public final class FrescoImageLoader implements ImageLoader
 		}
 
 		@Override
-		public void onFailure(String id, Throwable throwable)
+		public void onError(Throwable t)
 		{
-			super.onFailure(id, throwable);
 			if (mListener != null)
 			{
-				mListener.onError();
+				mListener.onError(t);
 			}
 		}
 	}

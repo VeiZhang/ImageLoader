@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.excellence.imageloader.ImageLoader;
 import com.excellence.imageloader.ImageLoaderOptions;
 import com.excellence.imageloader.listener.IListener;
+import com.excellence.imageloader.listener.Listener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -59,7 +60,7 @@ public final class PicassoImageLoader implements ImageLoader
 		mPicasso.setIndicatorsEnabled(options.isLogEnable);
 	}
 
-	private RequestCreator load(@NonNull Object obj, int placeholderResId, int errorResId)
+	private void load(@NonNull ImageView view, @NonNull Object obj, int placeholderResId, int errorResId, IListener listener)
 	{
 		RequestCreator requestCreator = null;
 		if (obj instanceof Integer)
@@ -126,7 +127,7 @@ public final class PicassoImageLoader implements ImageLoader
 			requestCreator.networkPolicy(NetworkPolicy.NO_CACHE);
 		}
 
-		return requestCreator;
+		requestCreator.into(view, new ImageLoaderListener(listener));
 	}
 
 	@Override
@@ -150,7 +151,7 @@ public final class PicassoImageLoader implements ImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, int resId, int placeholderResId, int errorResId, IListener listener)
 	{
-		load(resId, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
+		load(view, resId, placeholderResId, errorResId, listener);
 	}
 
 	@Override
@@ -174,7 +175,7 @@ public final class PicassoImageLoader implements ImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull File file, int placeholderResId, int errorResId, IListener listener)
 	{
-		load(file, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
+		load(view, file, placeholderResId, errorResId, listener);
 	}
 
 	@Override
@@ -198,7 +199,7 @@ public final class PicassoImageLoader implements ImageLoader
 	@Override
 	public void loadImage(@NonNull ImageView view, @NonNull String url, int placeholderResId, int errorResId, IListener listener)
 	{
-		load(url, placeholderResId, errorResId).into(view, new ImageLoaderListener(listener));
+		load(view, url, placeholderResId, errorResId, listener);
 	}
 
 	@Override
@@ -228,13 +229,22 @@ public final class PicassoImageLoader implements ImageLoader
 		mPicasso.invalidate(path);
 	}
 
-	private class ImageLoaderListener implements Callback
+	private class ImageLoaderListener extends Listener implements Callback
 	{
 		private IListener mListener = null;
 
 		public ImageLoaderListener(IListener listener)
 		{
 			mListener = listener;
+		}
+
+		@Override
+		public void onProgress(long current, long size)
+		{
+			if (mListener != null)
+			{
+				mListener.onProgress(current, size);
+			}
 		}
 
 		@Override
@@ -251,7 +261,7 @@ public final class PicassoImageLoader implements ImageLoader
 		{
 			if (mListener != null)
 			{
-				mListener.onError();
+				mListener.onError(e);
 			}
 		}
 	}

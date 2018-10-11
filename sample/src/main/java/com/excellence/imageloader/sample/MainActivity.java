@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity
 		int placeholder = R.drawable.placeholder;
 		int error = R.drawable.error;
 		String url = "https://raw.githubusercontent.com/VeiZhang/veizhang.github.io/master/uploads/tiimor.png";
+		String bigUrl = "http://online.sccnn.com/desk/411/apple1440_1005.jpg";
 
 		/**
 		 * Picasso加载资源图片
@@ -47,12 +48,12 @@ public class MainActivity extends AppCompatActivity
 		/**
 		 * Picasso加载网络图片
 		 */
-		mImageLoader.loadImage(imageView, url, placeholder, error, new IListener()
+		mImageLoader.loadImage(imageView, bigUrl, placeholder, error, new IListener()
 		{
 			@Override
-			public void onProgress()
+			public void onProgress(long current, long size)
 			{
-				Log.i(TAG, "onProgress");
+				Log.i(TAG, "onProgress " + current + " - " + size);
 			}
 
 			@Override
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 			}
 
 			@Override
-			public void onError()
+			public void onError(Throwable t)
 			{
 				Log.i(TAG, "onError");
 			}

@@ -72,7 +72,7 @@ class ProgressResponseBody extends ResponseBody
 
 				if (mListener != null)
 				{
-					mListener.onProgress();
+					mListener.onProgress(totalBytesRead, mResponseBody.contentLength());
 				}
 				return bytesRead;
 			}
