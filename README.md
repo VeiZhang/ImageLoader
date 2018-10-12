@@ -12,7 +12,7 @@
 
 * 多个图片加载库切换
 * 图片加载进度回调
-* 自定义缓存目录、大小
+* 自定义配置（如占位图片、错误占位图片、缓存目录、大小等）
 * 清除缓存
 
 ## 使用
@@ -193,6 +193,12 @@ Glide.with(getContext())
 
 
 
+## 版本更新
+|            版本          |                              描述                               |
+|------------------------- | -------------------------------------------------------------- |
+| [1.0.0][ImageLoaderV1.0.0] | 封装Fresco、Picasso、Glide图库，简单加载图片  **2018-10-11** |
+
+
 ## 感谢
 
 > - [ladingwu][ladingwu]
@@ -206,9 +212,6 @@ Glide.with(getContext())
 [imageloader-fresco]:https://bintray.com/veizhang/maven/imageloader-fresco/_latestVersion "imageloader-fresco"
 [imageloader-picasso]:https://bintray.com/veizhang/maven/imageloader-picasso/_latestVersion "imageloader-picasso"
 [imageloader-glide]:https://bintray.com/veizhang/maven/imageloader-glide/_latestVersion "imageloader-glide"
-[ladingwu]:https://github.com/ladingwu/ImageLoaderFramework
-[hpdx]:https://github.com/hpdx/fresco-helper
-[peng8350]:https://github.com/peng8350/LoadingProgress
 
 <!-- 图片链接 -->
 
@@ -217,11 +220,25 @@ Glide.with(getContext())
 [icon_imageloader-picasso]:https://api.bintray.com/packages/veizhang/maven/imageloader-picasso/images/download.svg
 [icon_imageloader-glide]:https://api.bintray.com/packages/veizhang/maven/imageloader-glide/images/download.svg
 
+<!-- 版本 -->
+
+[ImageLoaderV1.0.0]:https://bintray.com/veizhang/maven/imageloader/1.0.0
+
+<!-- 大神引用 -->
+
+[ladingwu]:https://github.com/ladingwu/ImageLoaderFramework "图库封装"
+[hpdx]:https://github.com/hpdx/fresco-helper "Fresco封装"
+[peng8350]:https://github.com/peng8350/LoadingProgress "图库加载进度"
+
 
 <!--
+
+待实现功能
 
 1.options也选用策略模式
 
 2.创建图片选择器
+
+3.其他图库封装
 
 -->

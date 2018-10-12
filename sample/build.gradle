@@ -44,6 +44,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+//    implementation 'com.excellence:imageloader:_latestVersion'
+//    implementation 'com.excellence:imageloader-picasso:_latestVersion'
+//    implementation 'com.excellence:imageloader-glide:_latestVersion'
+//    implementation 'com.excellence:imageloader-fresco:_latestVersion'
     implementation project(':ImageLoaderLibrary')
     implementation project(':Picasso')
     implementation project(':Glide')
