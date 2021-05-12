@@ -1,1 +1,2 @@
-include ':sample', ':ImageLoaderLibrary', ':Glide', ':Fresco', ':Picasso'
+include ':sample'
+include ':ImageLoaderLibrary', ':Glide', ':Fresco', ':Picasso'
